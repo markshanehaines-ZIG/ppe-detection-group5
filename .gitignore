@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*.pt
+*.onnx
+data/
+yolo_dataset/
+.DS_Store
+.ipynb_checkpoints/
