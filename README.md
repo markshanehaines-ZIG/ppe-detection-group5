@@ -214,9 +214,11 @@ This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) 
 
 | Member | Role |
 |---|---|
-| `[TODO — Name 1]` | `[TODO — Role]` |
-| `[TODO — Name 2]` | `[TODO — Role]` |
-| `[TODO — Name 3]` | `[TODO — Role]` |
+| Letícia Cristovam Clemente | *TBD* |
+| Malak Yaseen | *TBD* |
+| Marc Azzam | *TBD* |
+| Mark Shane Haines | *TBD* |
+| Osama Ata | *TBD* |
 
 **Group 5** — Zigurat Institute of Technology, MAICEN 1125
 
