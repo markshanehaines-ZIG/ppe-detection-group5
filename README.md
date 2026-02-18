@@ -181,10 +181,12 @@ See [`results/training_plots/`](results/training_plots/) for loss curves, P/R cu
 
 Full analysis in [`docs/error_analysis.md`](docs/error_analysis.md).
 
-**Summary:**
-- **3 False Positives** identified (e.g., yellow objects mistaken for helmets)
-- **3 False Negatives** identified (e.g., partially occluded bare heads missed)
-- **3 Improvement Recommendations** (e.g., night-time augmentation, more diverse vest colours)
+**Summary (following the AECO Error Taxonomy from Session 3):**
+- **3 False Positives** — e.g., yellow objects mistaken for helmets
+- **3 False Negatives** — e.g., partially occluded bare heads missed
+- **2 Class Confusions** — e.g., beanie misclassified as helmet (critical safety inversion)
+- **2 Localization Errors** — e.g., oversized bounding boxes merging adjacent workers
+- **5 Improvement Recommendations** prioritised by safety impact
 
 ---
 
@@ -221,6 +223,8 @@ This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) 
 | Osama Ata | *TBD* |
 
 **Group 5** — Zigurat Institute of Technology, MAICEN 1125
+
+> **Suggested roles to assign:** Project Lead · Dataset & Annotation Lead · Model Training Lead · Error Analysis & Evidence Lead · Governance & Presentation Lead
 
 ---
 
