@@ -69,6 +69,58 @@
 
 ---
 
+## Class Confusion (Model detects the object but assigns the wrong class)
+
+### CC-1: Head classified as Helmet (critical safety inversion)
+
+**What happened:** A worker wearing a dark-coloured beanie/knit cap was classified as "Helmet" (conf 0.42) instead of "Head" (bare head = violation).
+
+**Why it happened:** The model associates any head-covering shape with the Helmet class. A dark beanie creates a similar silhouette to a hard hat, especially at medium distance where texture detail is lost. This is the most dangerous class confusion possible — a genuine PPE violation is recorded as compliant.
+
+**AECO impact:** A safety officer relying on the system would see "Helmet detected" and move on, while the worker is actually unprotected. This is a **critical safety risk**.
+
+**Evidence:** See `results/evidence/validation_predictions/cc1_beanie_as_helmet.png`
+
+---
+
+### CC-2: Goggles confused with safety glasses
+
+**What happened:** A worker wearing standard prescription glasses was detected as "Goggles" (conf 0.33).
+
+**Why it happened:** The pseudo-labeling pipeline for goggles uses edge detection and circular shapes in the face region. Regular glasses produce similar edge patterns. The model has not learned to distinguish between safety goggles (which wrap around the face with a seal) and ordinary eyewear, because the pseudo-labels did not encode this distinction.
+
+**AECO impact:** Over-reporting goggles compliance. In environments requiring sealed eye protection (e.g., chemical handling), prescription glasses do not provide adequate protection.
+
+**Evidence:** See `results/evidence/validation_predictions/cc2_glasses_as_goggles.png`
+
+---
+
+## Localization Error (Object detected correctly but bounding box is inaccurate)
+
+### LE-1: Helmet bounding box includes neighbouring worker's shoulder
+
+**What happened:** A correct Helmet detection on one worker produced an oversized bounding box that extended down to include the shoulder and upper arm of an adjacent worker standing close by.
+
+**Why it happened:** When workers are clustered together (common at toolbox talks, break areas, or narrow corridors), the model struggles to separate individual objects. The Non-Maximum Suppression (NMS) step merges overlapping proposals, resulting in a single enlarged box.
+
+**AECO impact:** In a counting application (e.g., "how many helmets are visible?"), this would undercount by merging two detections into one. For automated compliance reports, the bounding box coordinates would be unreliable for cross-referencing with person detections.
+
+**Evidence:** See `results/evidence/validation_predictions/le1_oversized_helmet_box.png`
+
+---
+
+### LE-2: SafetyVest box too tall — includes worker's legs
+
+**What happened:** A SafetyVest was correctly identified, but the bounding box extended from the worker's neck down to their knees, well beyond the actual vest.
+
+**Why it happened:** The pseudo-labeling pipeline estimates the torso region as a percentage of the person bounding box (15–55% of height). When a worker is bending or crouching, this fixed ratio produces an inaccurate crop. The model learned from these imprecise pseudo-labels and reproduces similarly loose boxes.
+
+**AECO impact:** For quantity take-off or PPE inventory analysis, the oversized box inflates the apparent area of the vest. More importantly, it demonstrates a limitation of the pseudo-labeling approach — the training labels themselves have inherent localization noise, which the model cannot improve upon.
+
+**Evidence:** See `results/evidence/validation_predictions/le2_vest_box_too_tall.png`
+
+---
+
 ## Improvement Recommendations
 
 ### Recommendation 1: Augment with challenging lighting conditions
@@ -101,6 +153,46 @@
 
 ---
 
+### Recommendation 4: Manually refine pseudo-labels for Goggles class
+
+**Problem addressed:** CC-2 (glasses vs goggles), LE-2 (vest box too tall).
+
+**Approach:** The pseudo-labeling pipeline is a powerful bootstrapping tool, but it introduces noise into the training labels. For the next iteration, manually review and correct 200–300 pseudo-labeled images — tightening bounding boxes and removing incorrect labels (e.g., regular glasses labeled as goggles). This creates a cleaner training signal, which directly improves both classification accuracy and localization precision.
+
+**Expected impact:** Reduced class confusion between goggles and glasses, and tighter bounding boxes for all pseudo-labeled classes.
+
+---
+
+### Recommendation 5: Add "headwear" negative examples to combat class confusion
+
+**Problem addressed:** CC-1 (beanie classified as helmet — critical safety error).
+
+**Approach:** Collect 50–100 images of workers wearing non-PPE headwear (beanies, baseball caps, hoods, turbans) and ensure these are labeled as "Head" (violation), not "Helmet." Currently the model has few examples of head coverings that are not hard hats, so it defaults to the Helmet class for anything on a head. Training on explicit negative examples teaches the model the visual difference between a hard hat and other headwear.
+
+**Expected impact:** Direct reduction in the most dangerous error type — false compliance reporting. This should be the highest priority improvement for any production deployment.
+
+---
+
+## AECO Error Taxonomy
+
+This analysis follows the error taxonomy taught in Session 3, which categorises detection errors into four types based on their operational impact in Architecture, Engineering, Construction, and Operations contexts:
+
+| Error Type | Definition | AECO Cost | Examples in This Project |
+|---|---|---|---|
+| **False Positive** | AI detects an object that isn't there | Wasted inspection time, false alerts | FP-1, FP-2, FP-3 |
+| **False Negative** | AI misses an object that is present | **Safety risk**, missed violations | FN-1, FN-2, FN-3 |
+| **Class Confusion** | AI finds the object but gives it the wrong label | Wrong compliance status, bad data | CC-1, CC-2 |
+| **Localization Error** | Bounding box is in the right area but poorly fitted | Inaccurate counts, unreliable coordinates | LE-1, LE-2 |
+
+For PPE compliance monitoring, the severity ranking is:
+
+1. **Class Confusion (CC-1)** — Most dangerous: a violation reported as compliant
+2. **False Negative** — Dangerous: a violation not reported at all
+3. **False Positive** — Annoying but safe: a non-issue flagged as a problem
+4. **Localization Error** — Minor: correct detection with imprecise boundaries
+
+---
+
 ## Summary Table
 
 | ID | Type | Description | Severity | Fix Difficulty |
@@ -111,3 +203,7 @@
 | FN-1 | False Negative | Occluded bare head missed | **High** | Hard |
 | FN-2 | False Negative | Backlit helmet missed | **High** | Medium |
 | FN-3 | False Negative | Blue vest not detected | Medium | Easy |
+| CC-1 | Class Confusion | Beanie → Helmet (critical) | **Critical** | Medium |
+| CC-2 | Class Confusion | Glasses → Goggles | Medium | Medium |
+| LE-1 | Localization Error | Oversized helmet box | Low | Medium |
+| LE-2 | Localization Error | Vest box includes legs | Low | Hard |
