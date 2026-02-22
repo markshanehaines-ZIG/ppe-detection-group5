@@ -202,7 +202,15 @@ Full checklist in [`docs/governance_checklist.md`](docs/governance_checklist.md)
 
 ---
 
-## 10 · License
+## 10 · Disclaimer
+
+> **⚠️ This model is an assistive tool for preliminary screening only. It produces False Negatives. It must NOT be used as the sole verifier for life-safety decisions.**
+
+This system is designed to supplement — not replace — manual PPE inspections conducted by qualified safety professionals.
+
+---
+
+## 11 · License
 
 This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) for details.
 
@@ -212,7 +220,7 @@ This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) 
 
 ---
 
-## 11 · Team
+## 12 · Team
 
 | Member | Role |
 |---|---|
@@ -228,7 +236,7 @@ This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) 
 
 ---
 
-## 12 · References
+## 13 · References
 
 1. Ultralytics YOLOv8 — https://github.com/ultralytics/ultralytics
 2. MAICEN Dataset — https://github.com/docilio/MAICEN
