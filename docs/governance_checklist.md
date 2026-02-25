@@ -9,7 +9,7 @@
 
 **Source:** MAICEN public dataset ([github.com/docilio/MAICEN](https://github.com/docilio/MAICEN)) — Pascal VOC XML annotations for Helmet and Head classes. SafetyVest and Goggles classes were added via our pseudo-labeling pipeline (see README Section 3).
 
-**Roboflow Version:** `[TODO — INSERT YOUR ROBOFLOW LINK HERE]` (YOLOv8 format, 640×640, v1)
+**Roboflow Version:** [PPE-Detection-Group5 v1](https://universe.roboflow.com/mark-shane-haines-zigurat/ppe-detection-group5/dataset/1) (YOLOv8 format, 512×512, v1)
 
 **Date Collected:** Original dataset published 2023. Pseudo-labels generated January 2026.
 
