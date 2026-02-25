@@ -31,12 +31,12 @@ Construction sites suffer approximately **150,000 non-fatal injuries per year** 
 | Item | Detail |
 |---|---|
 | **Source** | [MAICEN dataset](https://github.com/docilio/MAICEN) (Pascal VOC XML annotations) |
-| **Roboflow** | `[TODO — INSERT YOUR ROBOFLOW LINK HERE]` |
+| **Roboflow** | [PPE-Detection-Group5 v1](https://universe.roboflow.com/mark-shane-haines-zigurat/ppe-detection-group5/dataset/1) |
 | **Original classes** | Helmet, Head *(+ Person — dropped as non-informative)* |
 | **Added via pseudo-labeling** | SafetyVest, Goggles |
-| **Total images** | ~2,500 |
-| **Split** | 70 % Train · 20 % Val · 10 % Test |
-| **Export format** | YOLOv8, 640 × 640, Auto-Orient |
+| **Total images** | 1,742 |
+| **Split** | 80 % Train · 20 % Val |
+| **Export format** | YOLOv8, 512 × 512 (resized to 640 × 640 during training) |
 
 ### Class Distribution
 
@@ -77,7 +77,7 @@ This approach enables **4-class detection from a 2-class dataset**, eliminating 
 | **Model** | YOLOv8m (medium) |
 | **Pre-trained weights** | COCO (`yolov8m.pt`) |
 | **Input size** | 640 × 640 |
-| **Epochs** | 20 |
+| **Epochs** | 30 |
 | **Confidence threshold** | 0.25 (low — prioritises recall for safety) |
 | **Early stopping** | patience = 7 |
 | **Batch size** | 16 |
@@ -159,7 +159,7 @@ See [`results/training_plots/`](results/training_plots/) for loss curves, P/R cu
 3. Run All:
    → Runtime > Restart runtime and run all
 
-4. Expected runtime: ~25–35 minutes on T4 GPU
+4. Expected runtime: ~25–40 minutes on T4 GPU
 ```
 
 ### Reproducibility Checklist
