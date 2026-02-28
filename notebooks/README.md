@@ -4,9 +4,9 @@ This folder contains the end-to-end training and evaluation notebook.
 
 ## Files
 
-| Notebook | Description |
-|---|---|
-| `PPE_Detection_Training.ipynb` | Full pipeline: data loading → pseudo-labeling → training → evaluation → predictions |
+| Notebook                                     | Description                                                                         |
+| -------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `MAICEN_1125_M4_U4_Group_5_Assignment.ipynb` | Full pipeline: data loading → pseudo-labeling → training → evaluation → predictions |
 
 ## How to Run
 
