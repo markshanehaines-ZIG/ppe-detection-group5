@@ -1,4 +1,4 @@
-# PPE Compliance Detection System — Group 5
+90# PPE Compliance Detection System — Group 5
 
 **Module 4 · Unit 4 — Computer Vision**
 **Zigurat Institute of Technology — MAICEN 1125**
@@ -16,38 +16,38 @@ Construction sites suffer approximately 150,000 non-fatal injuries per year in t
 
 ### Problem Framing
 
-| Component | Detail |
-|-----------|--------|
-| Objects of Interest | Helmet, Head (bare = violation), SafetyVest, Goggles |
-| Environment | Indoor/outdoor construction sites, daylight & artificial light |
-| Critical Metric | Recall — minimise missed violations |
-| Success Criteria | Detect bare heads at ≥ 85% recall with conf ≥ 0.25 |
-| Key Failure Mode | Confusing a yellow hard hat with a yellow bucket; missing partially occluded heads |
+| Component           | Detail                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| Objects of Interest | Helmet, Head (bare = violation), SafetyVest, Goggles                               |
+| Environment         | Indoor/outdoor construction sites, daylight & artificial light                     |
+| Critical Metric     | Recall — minimise missed violations                                                |
+| Success Criteria    | Detect bare heads at ≥ 85% recall with conf ≥ 0.25                                 |
+| Key Failure Mode    | Confusing a yellow hard hat with a yellow bucket; missing partially occluded heads |
 
 ---
 
 ## 2 · Dataset
 
-| Item | Detail |
-|------|--------|
-| Source | MAICEN dataset (Pascal VOC XML annotations) |
-| Roboflow | [PPE-Detection-Group5](https://app.roboflow.com/mark-shane-haines-zigurat/ppe-detection-group5) |
-| Original classes | Helmet, Head (+ Person — dropped as non-informative) |
-| Added via pseudo-labeling | SafetyVest, Goggles |
-| Total images | ~4,250 (after augmentation and oversampling) |
-| Train split | 4,696 images |
-| Val split | 750 images |
-| Export format | YOLOv8, 640 × 640 |
+| Item                      | Detail                                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| Source                    | MAICEN dataset (Pascal VOC XML annotations)                                                     |
+| Roboflow                  | [PPE-Detection-Group5](https://app.roboflow.com/mark-shane-haines-zigurat/ppe-detection-group5) |
+| Original classes          | Helmet, Head (+ Person — dropped as non-informative)                                            |
+| Added via pseudo-labeling | SafetyVest, Goggles                                                                             |
+| Total images              | ~4,250 (after augmentation and oversampling)                                                    |
+| Train split               | 4,696 images                                                                                    |
+| Val split                 | 750 images                                                                                      |
+| Export format             | YOLOv8, 640 × 640                                                                               |
 
 ### Class Distribution
 
-| Class | Labels | Source |
-|-------|--------|--------|
-| Helmet | 16,195 | Original XML annotations |
-| Head | 4,850 | Original XML annotations |
-| SafetyVest | 3,206 | Pseudo-labeled (HSV color segmentation) |
-| Goggles | 4,209 | Pseudo-labeled (Canny edge detection) |
-| **Total** | **28,460** | |
+| Class      | Labels     | Source                                  |
+| ---------- | ---------- | --------------------------------------- |
+| Helmet     | 16,195     | Original XML annotations                |
+| Head       | 4,850      | Original XML annotations                |
+| SafetyVest | 3,206      | Pseudo-labeled (HSV color segmentation) |
+| Goggles    | 4,209      | Pseudo-labeled (Canny edge detection)   |
+| **Total**  | **28,460** |                                         |
 
 > **Note:** SafetyVest and Goggles were not in the original dataset. They were generated using our pseudo-labeling pipeline — this is the key innovation of this project (see Section 3).
 
@@ -58,12 +58,14 @@ Construction sites suffer approximately 150,000 non-fatal injuries per year in t
 The original MAICEN dataset only contains Helmet and Head annotations. To extend detection to SafetyVest and Goggles without manual annotation of thousands of images, we developed a pseudo-labeling pipeline:
 
 **SafetyVest detection algorithm:**
+
 1. Identify person bounding boxes from existing annotations
 2. Extract the torso region (15–55% of person bounding box height)
 3. Convert to HSV color space — high-visibility colours (yellow, orange, green) above threshold (0.15) trigger a SafetyVest label
 4. Generate a bounding box covering the torso region
 
 **Goggles detection algorithm:**
+
 1. From detected heads, extract the eye region (top portion of head box)
 2. Apply Canny edge detection to find circular patterns characteristic of safety goggles
 3. Validate against expected size ratios relative to the head (threshold: 0.45)
@@ -74,19 +76,19 @@ This approach enables 4-class detection from a 2-class dataset, generating 7,415
 
 ## 4 · Model Architecture & Training
 
-| Parameter | Value |
-|-----------|-------|
-| Model | YOLOv8m (medium, 25.9M parameters) |
-| Pre-trained weights | COCO (yolov8m.pt) |
-| Input size | 640 × 640 |
-| Epochs | 30 |
-| Confidence threshold | 0.25 (low — prioritises recall for safety) |
-| Early stopping | patience = 7 |
-| Batch size | 16 |
-| Optimizer | Auto (SGD with cosine LR decay) |
+| Parameter                | Value                                        |
+| ------------------------ | -------------------------------------------- |
+| Model                    | YOLOv8m (medium, 25.9M parameters)           |
+| Pre-trained weights      | COCO (yolov8m.pt)                            |
+| Input size               | 640 × 640                                    |
+| Epochs                   | 30                                           |
+| Confidence threshold     | 0.25 (low — prioritises recall for safety)   |
+| Early stopping           | patience = 7                                 |
+| Batch size               | 16                                           |
+| Optimizer                | Auto (SGD with cosine LR decay)              |
 | Class imbalance handling | Oversampling of images containing bare heads |
-| GPU | NVIDIA RTX 4000 Ada Generation (12GB VRAM) |
-| Training time | ~35 minutes |
+| GPU                      | NVIDIA RTX 4000 Ada Generation (12GB VRAM)   |
+| Training time            | ~35 minutes                                  |
 
 ### Why conf = 0.25?
 
@@ -101,21 +103,21 @@ In safety-critical applications, recall is king. A low confidence threshold mean
 
 ### Overall Metrics
 
-| Metric | Value |
-|--------|-------|
-| mAP50 | 0.742 |
-| mAP50-95 | 0.470 |
+| Metric    | Value |
+| --------- | ----- |
+| mAP50     | 0.742 |
+| mAP50-95  | 0.470 |
 | Precision | 0.735 |
-| Recall | 0.729 |
+| Recall    | 0.729 |
 
 ### Per-Class Performance
 
-| Class | Precision | Recall | F1 Score | mAP50 | Source |
-|-------|-----------|--------|----------|-------|--------|
-| Helmet | 0.923 | 0.941 | 0.932 | 0.970 | XML annotations |
-| Head | 0.880 | 0.919 | 0.899 | 0.930 | XML annotations |
-| SafetyVest | 0.553 | 0.778 | 0.647 | 0.714 | Pseudo-labeled |
-| Goggles | 0.474 | 0.354 | 0.405 | 0.332 | Pseudo-labeled |
+| Class      | Precision | Recall | F1 Score | mAP50 | Source          |
+| ---------- | --------- | ------ | -------- | ----- | --------------- |
+| Helmet     | 0.923     | 0.941  | 0.932    | 0.970 | XML annotations |
+| Head       | 0.880     | 0.919  | 0.899    | 0.930 | XML annotations |
+| SafetyVest | 0.553     | 0.778  | 0.647    | 0.714 | Pseudo-labeled  |
+| Goggles    | 0.474     | 0.354  | 0.405    | 0.332 | Pseudo-labeled  |
 
 > **Note:** XML-annotated classes (Helmet, Head) achieve strong F1 > 0.89 and mAP50 > 0.93. Pseudo-labeled classes show promising results given zero manual annotation — SafetyVest achieves mAP50 of 0.714, while Goggles (0.332) reflects the difficulty of detecting small objects from edge-based heuristics.
 
@@ -169,6 +171,7 @@ See `results/training_plots/` for loss curves, P/R curves, F1 curves, and confus
 - Python 3.11+
 - NVIDIA GPU with CUDA support (tested on RTX 4000 Ada, 12GB VRAM)
 - VS Code with Jupyter extension (or Google Colab with T4 GPU)
+- [uv](https://docs.astral.sh/uv/) for fast dependency management
 
 ### Step-by-step
 
@@ -180,11 +183,11 @@ See `results/training_plots/` for loss curves, P/R curves, F1 curves, and confus
    ./ppe_dataset/annotations/
    ./ppe_dataset/images/
 
-3. Open the notebook:
-   notebooks/MAICEN_1125_M4_U4_Group_5_Assignment.ipynb
+3. Install dependencies using uv:
+   uv sync
 
-4. Install PyTorch with CUDA:
-   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+4. Open the notebook with the environment active:
+   uv run jupyter notebook notebooks/MAICEN_1125_M4_U4_Group_5_Assignment.ipynb
 
 5. Run all cells sequentially:
    - Pseudo-labeling generates SafetyVest and Goggles labels at runtime (~60-90 min)
@@ -246,13 +249,13 @@ This project is licensed under the **MIT License** — see `LICENSE` for details
 
 ## 12 · Team
 
-| Member | Role |
-|--------|------|
-| Mark Shane Haines | Project Lead |
-| Letícia Cristovam Clemente | *TBD* |
-| Malak Yaseen | *TBD* |
-| Marc Azzam | *TBD* |
-| Osama Ata | *TBD* |
+| Member                     | Role         |
+| -------------------------- | ------------ |
+| Mark Shane Haines          | Project Lead |
+| Letícia Cristovam Clemente | _TBD_        |
+| Malak Yaseen               | _TBD_        |
+| Marc Azzam                 | _TBD_        |
+| Osama Ata                  | _TBD_        |
 
 **Group 5** — Zigurat Institute of Technology, MAICEN 1125
 
@@ -265,5 +268,5 @@ This project is licensed under the **MIT License** — see `LICENSE` for details
 - Ultralytics YOLOv8 — [github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics)
 - MAICEN Dataset — [github.com/docilio/MAICEN](https://github.com/docilio/MAICEN)
 - Roboflow Annotation Platform — [roboflow.com](https://roboflow.com/)
-- Redmon, J. et al. (2016). *You Only Look Once: Unified, Real-Time Object Detection.* [arxiv.org/abs/1506.02640](https://arxiv.org/abs/1506.02640)
-- Eurostat (2023). *Accidents at work statistics.* [ec.europa.eu/eurostat](https://ec.europa.eu/eurostat)
+- Redmon, J. et al. (2016). _You Only Look Once: Unified, Real-Time Object Detection._ [arxiv.org/abs/1506.02640](https://arxiv.org/abs/1506.02640)
+- Eurostat (2023). _Accidents at work statistics._ [ec.europa.eu/eurostat](https://ec.europa.eu/eurostat)

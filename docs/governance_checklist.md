@@ -67,13 +67,13 @@
 
 **Rationale:** This is a student portfolio / academic project. MIT License allows anyone to use, modify, and distribute the code freely. No proprietary site data is included.
 
-| Component | License | Notes |
-|-----------|---------|-------|
-| This project (code + docs) | MIT | See LICENSE file |
-| MAICEN dataset | Public repository | Check original repo for terms |
-| YOLOv8 (Ultralytics) | AGPL-3.0 | Enterprise license needed for closed-source commercial use |
-| Roboflow (annotations) | Roboflow ToS | Free tier for educational use |
-| VS Code + Jupyter | MIT / Microsoft ToS | Local development environment |
+| Component                  | License                          | Notes                                                      |
+| -------------------------- | -------------------------------- | ---------------------------------------------------------- |
+| This project (code + docs) | MIT                              | See LICENSE file                                           |
+| MAICEN dataset             | Public repository                | Check original repo for terms                              |
+| YOLOv8 (Ultralytics)       | AGPL-3.0                         | Enterprise license needed for closed-source commercial use |
+| Roboflow (annotations)     | Roboflow ToS                     | Free tier for educational use                              |
+| VS Code + Jupyter + uv     | MIT / Microsoft ToS / Apache-2.0 | Local development environment                              |
 
 ---
 
@@ -99,10 +99,10 @@ This system is designed to **supplement — not replace** — manual PPE inspect
 
 ## Regulatory Reference
 
-| Regulation | Relevance |
-|-----------|-----------|
-| GDPR (EU) | No personal data currently processed. DPIA required if extended to identity tracking. |
-| EU AI Act | Workplace safety monitoring may be classified as "high risk." Conformity assessment may be required for commercial deployment. |
-| OSHA / EU-OSHA | System supports PPE compliance monitoring but is not a certified inspection method. |
-| ISO 45001 | Continuous monitoring data supports occupational health & safety management objectives. |
-| ISO/IEC 42001:2023 | AI management system standard — framework for responsible AI development and deployment. |
+| Regulation         | Relevance                                                                                                                      |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| GDPR (EU)          | No personal data currently processed. DPIA required if extended to identity tracking.                                          |
+| EU AI Act          | Workplace safety monitoring may be classified as "high risk." Conformity assessment may be required for commercial deployment. |
+| OSHA / EU-OSHA     | System supports PPE compliance monitoring but is not a certified inspection method.                                            |
+| ISO 45001          | Continuous monitoring data supports occupational health & safety management objectives.                                        |
+| ISO/IEC 42001:2023 | AI management system standard — framework for responsible AI development and deployment.                                       |
